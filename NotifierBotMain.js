@@ -4,8 +4,6 @@ const firebase = require('firebase');
 const fs = require('fs');
 const pokemon = require('pokemon');
 
-//TODO mention server and channel
-
 const prefix = '$$';
 //TODO firebasetoken, discordtoken, dbpass as args/variables
 //TODO remove user from db when they leave the server
@@ -68,7 +66,7 @@ function notify(msg, poke) {
     database.database().ref(getServerPath(msg, poke)).once('value', (data) => {
         let users = Object.keys(data);
         users.forEach((userid) => {
-            //TODO pm all userids that poke x has been found on server y in channel z
+            client.users.get(userid).send(`Beep beep. A ${poke} raid has been reported on ${msg.guild.name} in channel ${msg.channel.name}.`)
         });
     });
 }
