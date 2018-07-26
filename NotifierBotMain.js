@@ -8,8 +8,9 @@ const prefix = '$$';
 //TODO firebasetoken, discordtoken, dbpass as args/variables
 //TODO remove user from db when they leave the server
 
+
 const database = firebase.initializeApp({
-    apiKey: firebasetoken,
+    apiKey: dbtoken,
     authDomain: 'raidnotifier-80bb5.firebaseapp.com',
     databaseURL: 'https://raidnotifier-80bb5.firebaseio.com/'
 });
@@ -17,7 +18,7 @@ const database = firebase.initializeApp({
 const client = new Discord.Client({autoReconnect: true});
 
 client.on('ready', () => {
-    database.auth().signInWithEmailAndPassword('jeeves@jeeves.com', dbpass).catch(((error) => {
+    database.auth().signInWithEmailAndPassword(dbuser, dbpass).catch(((error) => {
         console.log(error.message);
     }));
     console.log(`logged in as ${client.user.tag}!`);
@@ -112,3 +113,5 @@ commandFiles.forEach((ele) => {
 
     client.commands.set(command.name, command);
 });
+
+client.login(discordtoken);
