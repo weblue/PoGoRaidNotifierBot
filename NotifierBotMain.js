@@ -7,6 +7,10 @@ const pokemon = require('pokemon');
 const prefix = '$$';
 //TODO firebasetoken, discordtoken, dbpass as args/variables
 
+//TODO list
+
+//TODO add when joining mutual server
+
 
 
 const database = firebase.initializeApp({
@@ -18,7 +22,8 @@ const database = firebase.initializeApp({
 const client = new Discord.Client({autoReconnect: true});
 
 const errorMessages =
-    ['Please stop; you\'re killing me. ',
+    [
+        'Please stop; you\'re killing me. ',
         'Error with your input! ',
         'What are you doing? ',
     ];
@@ -62,7 +67,7 @@ client.on('message', (msg) => {
         if (msg.channel.name.includes('raids') && msg.content.includes(prefix)) {
 
             //Note: prefix is hardcoded because you can't escape a double character prefix
-            let poke = msg.content.match(/\$\$(.+?) /)[1];
+            let poke = msg.content.match(/\$\$([^\s]+)/)[1];
 
             console.log(poke.toString());
 
@@ -85,12 +90,14 @@ function pokemonExists(query) {
 
 function notify(msg, poke) {
     database.database().ref(getServerPath(msg, poke)).once('value', (data) => {
-        let users = Object.keys(data.val());
-        console.log(users);
-
-        users.forEach((userid) => {
-            msg.guild.members.get(userid).send(`Beep beep. A *${poke}* raid has been reported on *${msg.guild.name}* in channel *${msg.channel.name}*.`)
-        });
+        if (data.exists()) {
+            let users = Object.keys(data.val());
+            users.forEach((userid) => {
+                if (msg.guild.members.has(`${userid}`)) {
+                    msg.guild.members.get(userid).send(`Beep beep. A **${poke}** raid has been reported on **${msg.guild.name}** in channel *${msg.channel.name}*.`)
+                }
+            });
+        }
     });
 }
 
@@ -132,11 +139,15 @@ client.on("error", (e) => console.error(e));
 client.on("warn", (e) => console.warn(e));
 
 client.commands = new Discord.Collection();
+
 const commandFiles = fs.readdirSync('./commands');
 commandFiles.forEach((ele) => {
     const command = require(`./commands/${ele}`);
-
     client.commands.set(command.name, command);
-});
 
-client.login(discordToken);
+});
+client.login(discordToken).then(() => {
+
+    client.user.setPresence({status: 'online', game: {name: 'PM $$help to get started'}});
+
+});

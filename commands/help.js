@@ -21,7 +21,7 @@ module.exports = {
          *     Lists all commands and their usages
          */
         if (args.length === 0) {
-            let replyString = 'This bot is to allow you to register to raid encounters\n';
+            let replyString = 'This bot is to allow you to register interest in raid encounters.\nProvided by the Creators Collective, http://creatorscollective.club\n\n';
             commands.forEach((command) => {
                 if (command.name) {
                     replyString += `**${main.prefix}${command.name}**: ${command.description} \nUsage: ${command.usage}\n\n`;
