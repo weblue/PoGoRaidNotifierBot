@@ -86,7 +86,6 @@ function pokemonExists(query) {
 }
 
 function notify(msg, poke) {
-    //TODO notify
     database.database().ref(getServerPath(msg, poke)).once('value', (data) => {
         let users = Object.keys(data.val());
         console.log(users);
@@ -109,13 +108,13 @@ function getMutualServers(msg) {
 }
 
 function getServerPath(msg, poke) {
-    return `registrations/${msg.guild.id}/${poke}`;
+    return `registrations/${msg.guild.id}/${poke.toUpperCase()}`;
 }
 
 function getPokePaths(msg, poke) {
     let paths = [];
     getMutualServers(msg).forEach((serverid) => {
-        paths.push(`registrations/${serverid}/${poke}`);
+        paths.push(`registrations/${serverid}/${poke.toUpperCase()}`);
     });
 
     return paths
