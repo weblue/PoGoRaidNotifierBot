@@ -6,8 +6,6 @@ const pokemon = require('pokemon');
 
 const prefix = '$$';
 //TODO firebasetoken, discordtoken, dbpass as args/variables
-//TODO remove user from db when they leave the server
-//TODO make pokemon caps independent
 
 
 
@@ -84,7 +82,7 @@ client.on('message', (msg) => {
 
 function pokemonExists(query) {
     let name = query.charAt(0).toUpperCase() + query.slice(1).toLowerCase();
-    return !!pokemon.getId(query);
+    return !!pokemon.getId(name);
 }
 
 function notify(msg, poke) {
