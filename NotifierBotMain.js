@@ -7,6 +7,8 @@ const pokemon = require('pokemon');
 const prefix = '$$';
 //TODO firebasetoken, discordtoken, dbpass as args/variables
 //TODO remove user from db when they leave the server
+//TODO make pokemon caps independent
+
 
 
 const database = firebase.initializeApp({
@@ -17,6 +19,17 @@ const database = firebase.initializeApp({
 
 const client = new Discord.Client({autoReconnect: true});
 
+const errorMessages =
+    ['Please stop; you\'re killing me. ',
+        'Error with your input! ',
+        'What are you doing? ',
+    ];
+
+function randomErrorMessage() {
+    const index = Math.floor(Math.random() * errorMessages.length);
+    return errorMessages[index];
+}
+
 client.on('ready', () => {
     database.auth().signInWithEmailAndPassword(dbuser, dbpass).catch(((error) => {
         console.log(error.message);
@@ -25,10 +38,12 @@ client.on('ready', () => {
 });
 
 client.on('message', (msg) => {
-    if (!msg.content.contains(prefix) || msg.author.bot) return;
+    if (!msg.content.includes(prefix) || msg.author.bot) {
+        return;
+    }
 
     //If the message is a PM
-    if (!msg.channel.type === 'dm') {
+    if (msg.channel.type === 'dm' && msg.content.startsWith(prefix)) {
         console.info(`Processing command "${msg.content}" from ${msg.author.username}`);
 
         const args = msg.content.slice(prefix.length).split(/ +/);
@@ -44,15 +59,23 @@ client.on('message', (msg) => {
                 msg.author.send(randomErrorMessage() + error.message);
             }
         }
-    //If message is in a server
+        //If message is in a server
     } else if (msg.channel.type === 'text') {
-        if (msg.channel.name.contains('raids') && msg.contains(prefix)/*msg.isMentioned(client.user)*/) {
-            let regexp = new RegExp(`${prefix}(.*) `, 'g');
-            let poke = regexp.exec(msg.content)[0];
+        if (msg.channel.name.includes('raids') && msg.content.includes(prefix)) {
 
-            if (pokemonExists(poke)) {
-                notify(msg, poke);
+            //Note: prefix is hardcoded because you can't escape a double character prefix
+            let poke = msg.content.match(/\$\$(.+?) /)[1];
+
+            console.log(poke.toString());
+
+            try {
+                if (pokemonExists(poke))
+                    notify(msg, poke);
+            } catch (error) {
+                msg.author.send('Why would you do this');
             }
+        } else {
+            console.info(msg.channel.name + ' channel, contents: ' + msg.contents)
         }
     }
 });
@@ -60,14 +83,18 @@ client.on('message', (msg) => {
 //Helpers
 
 function pokemonExists(query) {
-    return pokemon.getId(query).instanceof(number);
+    let name = query.charAt(0).toUpperCase() + query.slice(1).toLowerCase();
+    return !!pokemon.getId(query);
 }
 
 function notify(msg, poke) {
+    //TODO notify
     database.database().ref(getServerPath(msg, poke)).once('value', (data) => {
-        let users = Object.keys(data);
+        let users = Object.keys(data.val());
+        console.log(users);
+
         users.forEach((userid) => {
-            client.users.get(userid).send(`Beep beep. A ${poke} raid has been reported on ${msg.guild.name} in channel ${msg.channel.name}.`)
+            msg.guild.members.get(userid).send(`Beep beep. A *${poke}* raid has been reported on *${msg.guild.name}* in channel *${msg.channel.name}*.`)
         });
     });
 }
@@ -75,7 +102,7 @@ function notify(msg, poke) {
 function getMutualServers(msg) {
     let mutuals = [];
     client.guilds.forEach((guild) => {
-        if (msg.author.id in guild.members) {
+        if (guild.members.has(`${msg.author.id}`)) {
             mutuals.push(guild.id);
         }
     });
@@ -114,4 +141,4 @@ commandFiles.forEach((ele) => {
     client.commands.set(command.name, command);
 });
 
-client.login(discordtoken);
+client.login(discordToken);

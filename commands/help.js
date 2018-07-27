@@ -1,4 +1,4 @@
-const main = require('../jeevesMain');
+const main = require('../NotifierBotMain');
 const fs = require('fs');
 
 const commands = [];
@@ -21,7 +21,7 @@ module.exports = {
          *     Lists all commands and their usages
          */
         if (args.length === 0) {
-            let replyString = 'This bot is to allow you to register to ';
+            let replyString = 'This bot is to allow you to register to raid encounters\n';
             commands.forEach((command) => {
                 if (command.name) {
                     replyString += `**${main.prefix}${command.name}**: ${command.description} \nUsage: ${command.usage}\n\n`;
