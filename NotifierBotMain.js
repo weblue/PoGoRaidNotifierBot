@@ -72,8 +72,6 @@ client.on('message', (msg) => {
             } catch (error) {
                 msg.author.send('Why would you do this');
             }
-        } else {
-            console.info(msg.channel.name + ' channel, contents: ' + msg.contents)
         }
     }
 });
