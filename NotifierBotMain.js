@@ -130,6 +130,9 @@ module.exports = {
 
 //Commands
 
+client.on("error", (e) => console.error(e));
+client.on("warn", (e) => console.warn(e));
+
 client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands');
 commandFiles.forEach((ele) => {
