@@ -5,6 +5,7 @@ Invite the bot to your server: https://discordapp.com/oauth2/authorize?client_id
 
 # Commands and usage
 **$$register [pokemon name]**
+
 **$$unregister [pokemon name]**
 
 The bot will check for any $$ in messages to channels containing the word *raids* in the title and ping all subscribed users
@@ -18,9 +19,15 @@ Configuration is currently hardcoded as well but is slated to be moved to a conf
 
 ### Configuration fields
 (some of these are planned so they may not match the names in code)
+
 firebaseToken: [your firebase token],
+
 authDomain: [firebase auth server url],
+
 databaseURL: [firebase db url],
+
 dbuser: [username to auth into firebase],
+
 dbpass: [password to auth into firebase],
+
 discordToken: [your discord API token]
