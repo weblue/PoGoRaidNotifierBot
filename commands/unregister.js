@@ -26,6 +26,6 @@ module.exports = {
             main.database.database().ref(`${path}/${msg.author.id}`).set(null);
         });
 
-        msg.reply(`Unregistered ${args[0]} to your alerts`);
+        msg.reply(`Unregistered ${main.properName(args[0])} to your alerts`);
     }
 };

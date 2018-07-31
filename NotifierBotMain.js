@@ -5,13 +5,12 @@ const fs = require('fs');
 const pokemon = require('pokemon');
 
 const prefix = '$$';
+
+//P0
 //TODO firebasetoken, discordtoken, dbpass as args/variables
 
-//TODO list
-
+//P1
 //TODO add when joining mutual server
-
-
 
 const database = firebase.initializeApp({
     apiKey: dbtoken,
@@ -40,6 +39,14 @@ client.on('ready', () => {
     console.log(`logged in as ${client.user.tag}!`);
 });
 
+client.on('guildMemberAdd', (guildMember) => {
+    // pokemon.all().forEach()
+    // TODO Check for mutuals and import current subscriptions
+    // TODO figure out if this adds too much stress to the server
+    // getServerPath(guildMember)
+});
+
+
 client.on('message', (msg) => {
     if (!msg.content.includes(prefix) || msg.author.bot) {
         return;
@@ -65,12 +72,8 @@ client.on('message', (msg) => {
         //If message is in a server
     } else if (msg.channel.type === 'text') {
         if (msg.channel.name.includes('raids') && msg.content.includes(prefix)) {
-
             //Note: prefix is hardcoded because you can't escape a double character prefix
             let poke = msg.content.match(/\$\$([^\s]+)/)[1];
-
-            console.log(poke.toString());
-
             try {
                 if (pokemonExists(poke))
                     notify(msg, poke);
@@ -84,8 +87,7 @@ client.on('message', (msg) => {
 //Helpers
 
 function pokemonExists(query) {
-    let name = query.charAt(0).toUpperCase() + query.slice(1).toLowerCase();
-    return !!pokemon.getId(name);
+    return !!pokemon.getId(properName(query));
 }
 
 function notify(msg, poke) {
@@ -94,11 +96,15 @@ function notify(msg, poke) {
             let users = Object.keys(data.val());
             users.forEach((userid) => {
                 if (msg.guild.members.has(`${userid}`)) {
-                    msg.guild.members.get(userid).send(`Beep beep. A **${poke}** raid has been reported on **${msg.guild.name}** in channel *${msg.channel.name}*.`)
+                    msg.guild.members.get(userid).send(`Beep beep. A **${properName(poke)}** raid has been reported on **${msg.guild.name}** in channel *${msg.channel.name}*.`)
                 }
             });
         }
     });
+}
+
+function properName(query) {
+    return query.charAt(0).toUpperCase() + query.slice(1).toLowerCase();
 }
 
 function getMutualServers(msg) {
@@ -128,26 +134,23 @@ function getPokePaths(msg, poke) {
 module.exports = {
     prefix,
     database,
+    properName,
     pokemonExists,
     getPokePaths
 };
 
-
 //Commands
-
 client.on("error", (e) => console.error(e));
 client.on("warn", (e) => console.warn(e));
 
 client.commands = new Discord.Collection();
-
 const commandFiles = fs.readdirSync('./commands');
 commandFiles.forEach((ele) => {
     const command = require(`./commands/${ele}`);
     client.commands.set(command.name, command);
 
 });
+
 client.login(discordToken).then(() => {
-
     client.user.setPresence({status: 'online', game: {name: 'PM $$help to get started'}});
-
 });

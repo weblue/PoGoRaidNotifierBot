@@ -21,12 +21,15 @@ module.exports = {
          *     Lists all commands and their usages
          */
         if (args.length === 0) {
-            let replyString = 'This bot is to allow you to register interest in raid encounters.\nProvided by the Creators Collective, http://creatorscollective.club\n\n';
+            let replyString = 'This bot is to allow you to register interest in raid encounters and pings interested users.\nProvided by the Creators Collective, http://creatorscollective.club\n\n';
             commands.forEach((command) => {
                 if (command.name) {
                     replyString += `**${main.prefix}${command.name}**: ${command.description} \nUsage: ${command.usage}\n\n`;
                 }
             });
+
+            replyString += 'To report, simply add $$[pokemon name] to any raid report. For Alolan Pokemon, use the form "Alolan $$[pokemon name]."\n\n';
+            replyString += 'Currently, there\'s an issue with registering new servers to existing users. If you aren\'t getting notifications from a server, just register again.';
 
             msg.author.send(replyString);
         } else if (args.length === 1) {

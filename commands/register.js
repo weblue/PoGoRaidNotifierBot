@@ -26,6 +26,6 @@ module.exports = {
             main.database.database().ref(`${path}/${msg.author.id}`).set(true);
         });
 
-        msg.reply(`Registered ${args[0]} to your alerts`);
+        msg.reply(`Registered ${main.properName(args[0])} to your alerts`);
     }
 };
