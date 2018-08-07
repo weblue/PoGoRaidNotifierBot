@@ -52,7 +52,7 @@ client.on('guildMemberAdd', (guildMember) => {
 
 
 client.on('message', (msg) => {
-    if (!msg.content.includes(prefix) || msg.author.bot) {
+    if (msg.author.bot) {
         return;
     }
 
@@ -90,7 +90,6 @@ client.on('message', (msg) => {
 });
 
 //Helpers
-
 function pokemonExists(query) {
     return !!pokemon.getId(properName(query));
 }
@@ -110,13 +109,16 @@ function notify(msg, poke) {
 
 function hasPokemon(string) {
     let str = string.replace(/[^a-zA-Z ]/g, "");
-    let wordArray = str.split("\\s+");
+    let wordArray = str.split(' ');
+
+    let mon = null;
 
     wordArray.forEach(word => {
-        if (pokemonExists(word))
-            return word;
+        if (pokemonExists(word)) {
+            mon = properName(word);
+        }
     });
-    return false;
+    return mon;
 }
 
 function properName(query) {
