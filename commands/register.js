@@ -25,7 +25,5 @@ module.exports = {
         main.getPokePaths(msg, args[0]).forEach((path) => {
             main.database.database().ref(`${path}/${msg.author.id}`).set(true);
         });
-
-        setTimeout(function() { msg.reply(`Registered ${main.properName(args[0])} to your alerts`) }, 3000);
     }
 };
