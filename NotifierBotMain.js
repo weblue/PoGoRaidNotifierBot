@@ -33,6 +33,7 @@ const errorMessages =
         'Please stop; you\'re killing me. ',
         'Error with your input! ',
         'What are you doing? ',
+        'Why would you do this? ',
     ];
 
 function randomErrorMessage() {
@@ -68,25 +69,23 @@ client.on('message', (msg) => {
         const cmd = args.shift().toLowerCase();
 
         if (!client.commands.has(cmd)) {
-            msg.reply(`${randomErrorMessage()} That's not a command!`)
+            setTimeout(() => { msg.react('👍') }, 3000);
         } else {
             try {
                 client.commands.get(cmd).execute(msg, args);
             } catch (error) {
                 console.error(`${msg.author.username} triggered a command_exec_error: ${error.message}`);
-                msg.author.send(randomErrorMessage() + error.message);
             }
         }
-        //If message is in a server
+    //If message is in a server
     } else if (msg.channel.type === 'text') {
         if (msg.channel.name.includes('raids') && hasPokemon(msg.content)) {
-            //Note: prefix is hardcoded because you can't escape a double character prefix
-            let poke = msg.content.match(/\$\$([^\s]+)/)[1];
             try {
-                if (pokemonExists(poke))
-                    notify(msg, poke);
+                notify(msg, hasPokemon(msg.content));
             } catch (error) {
-                msg.author.send('Why would you do this');
+                setTimeout(() => {
+                    msg.react('👍');
+                }, 3000);
             }
         }
     }
@@ -117,7 +116,7 @@ function hasPokemon(string) {
 
     wordArray.forEach(word => {
         if (pokemonExists(word))
-            return true;
+            return word;
     });
     return false;
 }
