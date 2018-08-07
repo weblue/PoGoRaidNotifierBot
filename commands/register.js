@@ -12,11 +12,11 @@ module.exports = {
         */
 
         if (args.length !== 1) {
-            msg.reply(`Usage: ${this.usage}`);
+            setTimeout(function() { msg.reply(`Usage: ${this.usage}`) }, 3000);
             return;
         }
         if (!main.pokemonExists(args[0])) {
-            msg.reply('You must specify a valid Pokemon!');
+            setTimeout(function() { msg.reply('You must specify a valid Pokemon!') }, 3000);
             return;
         }
 
@@ -26,6 +26,6 @@ module.exports = {
             main.database.database().ref(`${path}/${msg.author.id}`).set(true);
         });
 
-        msg.reply(`Registered ${main.properName(args[0])} to your alerts`);
+        setTimeout(function() { msg.reply(`Registered ${main.properName(args[0])} to your alerts`) }, 3000);
     }
 };

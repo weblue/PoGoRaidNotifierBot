@@ -8,9 +8,17 @@ const prefix = '$$';
 
 //P0
 //TODO firebasetoken, discordtoken, dbpass as args/variables
+//TODO nicknames
 
 //P1
 //TODO add when joining mutual server
+
+const { dbtoken, dbuser, dbpass, discordToken } = {
+    dbtoken: 'AIzaSyDeQhAczifYwJV0OrxO6cQI1ce0dENCMXA',
+    dbuser: 'raider@mance.com',
+    dbpass: 'timetodiemrfly',
+    discordToken: 'NDcxODg3NTE1Mzg5Nzg4MTYw.DjrX5w.dqlKdCzj8sB_aVHhFsJeusnirhc'
+};
 
 const database = firebase.initializeApp({
     apiKey: dbtoken,
@@ -71,7 +79,7 @@ client.on('message', (msg) => {
         }
         //If message is in a server
     } else if (msg.channel.type === 'text') {
-        if (msg.channel.name.includes('raids') && msg.content.includes(prefix)) {
+        if (msg.channel.name.includes('raids') && hasPokemon(msg.content)) {
             //Note: prefix is hardcoded because you can't escape a double character prefix
             let poke = msg.content.match(/\$\$([^\s]+)/)[1];
             try {
@@ -101,6 +109,17 @@ function notify(msg, poke) {
             });
         }
     });
+}
+
+function hasPokemon(string) {
+    let str = string.replace(/[^a-zA-Z ]/g, "");
+    let wordArray = str.split("\\s+");
+
+    wordArray.forEach(word => {
+        if (pokemonExists(word))
+            return true;
+    });
+    return false;
 }
 
 function properName(query) {
@@ -151,6 +170,7 @@ commandFiles.forEach((ele) => {
 
 });
 
+//TODO change auth method
 client.login(discordToken).then(() => {
     client.user.setPresence({status: 'online', game: {name: 'PM $$help to get started'}});
 });
