@@ -15,11 +15,6 @@ const prefix = '$$';
 
 
 
-
-
-
-
-
 const database = firebase.initializeApp({
     apiKey: dbtoken,
     authDomain: 'raidnotifier-80bb5.firebaseapp.com',
@@ -69,10 +64,13 @@ client.on('message', (msg) => {
         const cmd = args.shift().toLowerCase();
 
         if (!client.commands.has(cmd)) {
-            setTimeout(() => { msg.react('👍') }, 3000);
+            setTimeout(() => { msg.react('👎') }, 3000);
         } else {
             try {
                 client.commands.get(cmd).execute(msg, args);
+                setTimeout(() => {
+                    msg.react('👍');
+                }, 3000);
             } catch (error) {
                 console.error(`${msg.author.username} triggered a command_exec_error: ${error.message}`);
             }
@@ -84,7 +82,7 @@ client.on('message', (msg) => {
                 notify(msg, hasPokemon(msg.content));
             } catch (error) {
                 setTimeout(() => {
-                    msg.react('👍');
+                    msg.react('👎');
                 }, 3000);
             }
         }
@@ -171,5 +169,5 @@ commandFiles.forEach((ele) => {
 
 //TODO change auth method
 client.login(discordToken).then(() => {
-    client.user.setPresence({status: 'online', game: {name: 'PM $$help to get started'}});
+    client.user.setPresence({status: 'online', game: {name: 'Pls no'}});
 });
