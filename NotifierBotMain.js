@@ -13,12 +13,12 @@ const prefix = '$$';
 //P1
 //TODO add when joining mutual server
 
-const { dbtoken, dbuser, dbpass, discordToken } = {
-    dbtoken: 'AIzaSyDeQhAczifYwJV0OrxO6cQI1ce0dENCMXA',
-    dbuser: 'raider@mance.com',
-    dbpass: 'timetodiemrfly',
-    discordToken: 'NDcxODg3NTE1Mzg5Nzg4MTYw.DjrX5w.dqlKdCzj8sB_aVHhFsJeusnirhc'
-};
+
+
+
+
+
+
 
 const database = firebase.initializeApp({
     apiKey: dbtoken,
