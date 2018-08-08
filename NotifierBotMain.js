@@ -9,16 +9,12 @@ const prefix = '$$';
 //P0
 //TODO firebasetoken, discordtoken, dbpass as args/variables
 //TODO nicknames
+//TODO field research
 
 //P1
 //TODO add when joining mutual server
 
-const { dbtoken, dbuser, dbpass, discordToken } = {
-    dbtoken: 'AIzaSyDeQhAczifYwJV0OrxO6cQI1ce0dENCMXA',
-    dbuser: 'raider@mance.com',
-    dbpass: 'timetodiemrfly',
-    discordToken: 'NDc2NTIwNDgzODc0MDEzMTg3.Dku3RA.VomwtPM_77crjXcpA99aZEsYI60'
-};
+
 
 const database = firebase.initializeApp({
     apiKey: dbtoken,
@@ -96,7 +92,11 @@ client.on('message', (msg) => {
 
 //Helpers
 function pokemonExists(query) {
-    return !!pokemon.getId(properName(query));
+    try {
+        return !!pokemon.getId(properName(query));
+    } catch (error) {
+        return false;
+    }
 }
 
 function notify(msg, poke) {
