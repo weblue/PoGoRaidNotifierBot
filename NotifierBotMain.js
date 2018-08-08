@@ -13,7 +13,12 @@ const prefix = '$$';
 //P1
 //TODO add when joining mutual server
 
-
+const { dbtoken, dbuser, dbpass, discordToken } = {
+    dbtoken: 'AIzaSyDeQhAczifYwJV0OrxO6cQI1ce0dENCMXA',
+    dbuser: 'raider@mance.com',
+    dbpass: 'timetodiemrfly',
+    discordToken: 'NDc2NTIwNDgzODc0MDEzMTg3.Dku3RA.VomwtPM_77crjXcpA99aZEsYI60'
+};
 
 const database = firebase.initializeApp({
     apiKey: dbtoken,
@@ -101,6 +106,7 @@ function notify(msg, poke) {
             users.forEach((userid) => {
                 if (msg.guild.members.has(`${userid}`)) {
                     msg.guild.members.get(userid).send(`Beep beep. A **${properName(poke)}** raid has been reported on **${msg.guild.name}** in channel *${msg.channel.name}*.`)
+                    //TODO remove users from list of to be notified after one notif
                 }
             });
         }
