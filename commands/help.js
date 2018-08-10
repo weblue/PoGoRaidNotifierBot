@@ -21,7 +21,7 @@ module.exports = {
          *     Lists all commands and their usages
          */
         if (args.length === 0) {
-            let replyString = 'This bot is to allow you to register interest in raid encounters and pings interested users.\nProvided by the Creators Collective, http://creatorscollective.club\n\n';
+            let replyString = 'This bot is to allow you to register interest in raid encounters and pings interested users.\nProvided by the Creators Collective, http://creatorscollective.club\nWant to suggest changes? Head on over to https://github.com/weblue/PoGoRaidNotifierBot/issues!\n\n';
             commands.forEach((command) => {
                 if (command.name) {
                     replyString += `**${main.prefix}${command.name}**: ${command.description} \nUsage: ${command.usage}\n\n`;
