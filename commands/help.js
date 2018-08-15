@@ -28,7 +28,6 @@ module.exports = {
                 }
             });
 
-            replyString += 'To report, simply add $$[pokemon name] to any raid report. For Alolan Pokemon, use the form "Alolan $$[pokemon name]."\n\n';
             replyString += 'Currently, there\'s an issue with registering new servers to existing users. If you aren\'t getting notifications from a server, just register again.';
 
             msg.author.send(replyString);
