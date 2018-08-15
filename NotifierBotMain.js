@@ -6,8 +6,12 @@ const pokemon = require('pokemon');
 
 const prefix = '$$';
 
+const nicknameTable = require('./data/nickname_map');
+
 //P0
 //TODO firebasetoken, discordtoken, dbpass as args/variables
+//TODO nicknames
+//TODO field research
 
 //P1
 //TODO add when joining mutual server
@@ -25,6 +29,7 @@ const errorMessages =
         'Please stop; you\'re killing me. ',
         'Error with your input! ',
         'What are you doing? ',
+        'Why would you do this? ',
     ];
 
 function randomErrorMessage() {
@@ -48,7 +53,7 @@ client.on('guildMemberAdd', (guildMember) => {
 
 
 client.on('message', (msg) => {
-    if (!msg.content.includes(prefix) || msg.author.bot) {
+    if (msg.author.bot) {
         return;
     }
 
@@ -71,23 +76,42 @@ client.on('message', (msg) => {
         }
         //If message is in a server
     } else if (msg.channel.type === 'text') {
-        if (msg.channel.name.includes('raids') && msg.content.includes(prefix)) {
-            //Note: prefix is hardcoded because you can't escape a double character prefix
-            let poke = msg.content.match(/\$\$([^\s]+)/)[1];
-            try {
-                if (pokemonExists(poke))
-                    notify(msg, poke);
-            } catch (error) {
-                msg.author.send('Why would you do this');
+        if (msg.channel.name.includes('raids')) {
+            let processed = convertNickname(msg);
+            let poke = hasPokemon(processed.content);
+            if (poke) {
+                try {
+                    notify(processed, poke);
+                } catch (error) {
+                    //this line intentionally left blank
+                }
             }
         }
     }
 });
 
 //Helpers
-
 function pokemonExists(query) {
-    return !!pokemon.getId(properName(query));
+    try {
+        return !!pokemon.getId(properName(query));
+    } catch (error) {
+        return false;
+    }
+}
+
+function convertNickname(query) {
+    let wordArray = query.split(' ');
+    let rebuild = '';
+    wordArray.forEach((word) => {
+        console.log(word)
+        if (nicknameTable[word.toLowerCase()])
+            rebuild += nicknameTable[word.toLowerCase()];
+        else
+            rebuild += word;
+        rebuild += ' ';
+    });
+
+    return rebuild;
 }
 
 function notify(msg, poke) {
@@ -97,10 +121,24 @@ function notify(msg, poke) {
             users.forEach((userid) => {
                 if (msg.guild.members.has(`${userid}`)) {
                     msg.guild.members.get(userid).send(`Beep beep. A **${properName(poke)}** raid has been reported on **${msg.guild.name}** in channel *${msg.channel.name}*.`)
+                    //TODO remove users from list of to be notified after one notif
                 }
             });
         }
     });
+}
+
+function hasPokemon(string) {
+    let str = string.replace(/[^a-zA-Z ]/g, "");
+    let wordArray = str.split(' ');
+    let mon = null;
+
+    wordArray.forEach(word => {
+        if (pokemonExists(word)) {
+            mon = properName(word);
+        }
+    });
+    return mon;
 }
 
 function properName(query) {
