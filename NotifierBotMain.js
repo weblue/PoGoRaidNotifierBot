@@ -9,8 +9,7 @@ const prefix = '$$';
 const nicknameTable = require('./data/nickname_map');
 
 //P0
-//TODO firebasetoken, discordtoken, dbpass as args/variables
-//TODO nicknames
+//TODO firebasetoken, discordtoken, dbpass as config document
 //TODO field research
 
 //P1
