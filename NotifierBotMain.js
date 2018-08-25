@@ -10,10 +10,12 @@ const nicknameTable = require('./data/nickname_map');
 
 //P0
 //TODO firebasetoken, discordtoken, dbpass as config document
-//TODO field research
 
 //P1
 //TODO add when joining mutual server
+//TODO field research, gym name recognition
+
+
 
 const database = firebase.initializeApp({
     apiKey: dbtoken,
@@ -99,10 +101,11 @@ function pokemonExists(query) {
 }
 
 function convertNickname(query) {
+    query = query + '';
     let wordArray = query.split(' ');
     let rebuild = '';
     wordArray.forEach((word) => {
-        console.log(word)
+        console.log(word);
         if (nicknameTable[word.toLowerCase()])
             rebuild += nicknameTable[word.toLowerCase()];
         else
@@ -128,6 +131,7 @@ function notify(msg, poke) {
 }
 
 function hasPokemon(string) {
+    string = string + '';
     let str = string.replace(/[^a-zA-Z ]/g, "");
     let wordArray = str.split(' ');
     let mon = null;
