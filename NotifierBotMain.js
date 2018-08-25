@@ -79,10 +79,10 @@ client.on('message', (msg) => {
     } else if (msg.channel.type === 'text') {
         if (msg.channel.name.includes('raids')) {
             let processed = convertNickname(msg);
-            let poke = hasPokemon(processed.content);
+            let poke = hasPokemon(processed);
             if (poke) {
                 try {
-                    notify(processed, poke);
+                    notify(msg, poke);
                 } catch (error) {
                     //this line intentionally left blank
                 }
@@ -105,9 +105,9 @@ function convertNickname(query) {
     let wordArray = query.split(' ');
     let rebuild = '';
     wordArray.forEach((word) => {
-        console.log(word);
-        if (nicknameTable[word.toLowerCase()])
-            rebuild += nicknameTable[word.toLowerCase()];
+        let str = word.replace(/[^a-zA-Z ]/g, "");
+        if (nicknameTable[str.toLowerCase()])
+            rebuild += nicknameTable[str.toLowerCase()];
         else
             rebuild += word;
         rebuild += ' ';
